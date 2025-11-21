@@ -1,0 +1,319 @@
+{
+  "id": "4a3dfff0-29c9-4460-aa79-fd3215d8fa87",
+  "revision": 0,
+  "last_node_id": 16,
+  "last_link_id": 10,
+  "nodes": [
+    {
+      "id": 12,
+      "type": "NodeValidator",
+      "pos": [
+        -853.6131510416667,
+        -580
+      ],
+      "size": [
+        400,
+        608
+      ],
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "workflow_edges",
+          "type": "STRING",
+          "link": 7
+        },
+        {
+          "name": "instruction",
+          "type": "STRING",
+          "widget": {
+            "name": "instruction"
+          },
+          "link": 9
+        }
+      ],
+      "outputs": [
+        {
+          "name": "workflow_edges (refined)",
+          "type": "STRING",
+          "links": [
+            8
+          ]
+        },
+        {
+          "name": "llm_prompts (debug)",
+          "type": "STRING",
+          "links": null
+        },
+        {
+          "name": "candidate_nodes (debug)",
+          "type": "STRING",
+          "links": null
+        }
+      ],
+      "properties": {
+        "enableTabs": false,
+        "tabWidth": 65,
+        "tabXOffset": 10,
+        "hasSecondTab": false,
+        "secondTabText": "Send Back",
+        "secondTabOffset": 80,
+        "secondTabWidth": 65,
+        "Node name for S&R": "NodeValidator",
+        "ue_properties": {
+          "widget_ue_connectable": {},
+          "input_ue_unconnectable": {},
+          "version": "7.5.1"
+        }
+      },
+      "widgets_values": [
+        "",
+        true,
+        "Qwen2.5-7B-Instruct-q8_0.gguf",
+        "paraphrase-multilingual-MiniLM-L12-v2",
+        "catalog",
+        "auto",
+        "auto",
+        "auto",
+        true,
+        -1,
+        4096,
+        4096,
+        true,
+        false,
+        512,
+        "Auto",
+        0.95,
+        5,
+        0.7,
+        3771414511,
+        "randomize"
+      ]
+    },
+    {
+      "id": 13,
+      "type": "WorkflowBuilder",
+      "pos": [
+        -417.2263020833334,
+        -580
+      ],
+      "size": [
+        270.839453125,
+        126
+      ],
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "workflow_edges",
+          "type": "STRING",
+          "link": 8
+        }
+      ],
+      "outputs": [
+        {
+          "name": "workflow_json",
+          "type": "STRING",
+          "links": []
+        },
+        {
+          "name": "file_path",
+          "type": "STRING",
+          "links": null
+        }
+      ],
+      "properties": {
+        "enableTabs": false,
+        "tabWidth": 65,
+        "tabXOffset": 10,
+        "hasSecondTab": false,
+        "secondTabText": "Send Back",
+        "secondTabOffset": 80,
+        "secondTabWidth": 65,
+        "Node name for S&R": "WorkflowBuilder",
+        "ue_properties": {
+          "widget_ue_connectable": {},
+          "input_ue_unconnectable": {},
+          "version": "7.5.1"
+        }
+      },
+      "widgets_values": [
+        "catalog",
+        true,
+        "generated_workflow"
+      ]
+    },
+    {
+      "id": 16,
+      "type": "Note",
+      "pos": [
+        -110.00000000000011,
+        -580
+      ],
+      "size": [
+        290,
+        120
+      ],
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "properties": {
+        "ue_properties": {
+          "widget_ue_connectable": {},
+          "version": "7.5.1",
+          "input_ue_unconnectable": {}
+        }
+      },
+      "widgets_values": [
+        "You don't have to connect anything to the Build and Save Workflow output, but can use a \"show text/string\" type of node here from another node package."
+      ],
+      "color": "#432",
+      "bgcolor": "#653"
+    },
+    {
+      "id": 14,
+      "type": "Note",
+      "pos": [
+        -850,
+        -810
+      ],
+      "size": [
+        400,
+        170
+      ],
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "properties": {
+        "ue_properties": {
+          "widget_ue_connectable": {},
+          "version": "7.5.1",
+          "input_ue_unconnectable": {}
+        }
+      },
+      "widgets_values": [
+        "NodeValidator is optional but recommended. You do not have to use LLM Refinement, but it can help if the embedding model is not sufficient to fix edge inconsitencies in the output from WorkflowGenerator.\n\nYou can also either input the same instructions from WorkflowGenerator, add different instructions, or leave instructions blank, for the LLM model. These are only used if use_llm_refinement is enabled. I have not tested the affect of using different instructions thoroughly, so you will have to experiment on your own.\n\n"
+      ],
+      "color": "#432",
+      "bgcolor": "#653"
+    },
+    {
+      "id": 11,
+      "type": "WorkflowGenerator",
+      "pos": [
+        -1290,
+        -580
+      ],
+      "size": [
+        400,
+        516
+      ],
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "workflow_edges",
+          "type": "STRING",
+          "links": [
+            7
+          ]
+        },
+        {
+          "name": "instruction",
+          "type": "STRING",
+          "links": [
+            9
+          ]
+        }
+      ],
+      "properties": {
+        "enableTabs": false,
+        "tabWidth": 65,
+        "tabXOffset": 10,
+        "hasSecondTab": false,
+        "secondTabText": "Send Back",
+        "secondTabOffset": 80,
+        "secondTabWidth": 65,
+        "Node name for S&R": "WorkflowGenerator",
+        "ue_properties": {
+          "widget_ue_connectable": {},
+          "input_ue_unconnectable": {},
+          "version": "7.5.1"
+        }
+      },
+      "widgets_values": [
+        "Create a flux1 image to image workflow with ultimate upscale support",
+        "workflow-generator-q8_0.gguf",
+        "auto",
+        "auto",
+        "auto",
+        true,
+        -1,
+        8192,
+        4096,
+        true,
+        false,
+        512,
+        "Auto",
+        0.95,
+        0.7,
+        false,
+        2818631848,
+        "randomize"
+      ]
+    }
+  ],
+  "links": [
+    [
+      7,
+      11,
+      0,
+      12,
+      0,
+      "STRING"
+    ],
+    [
+      8,
+      12,
+      0,
+      13,
+      0,
+      "STRING"
+    ],
+    [
+      9,
+      11,
+      1,
+      12,
+      1,
+      "STRING"
+    ]
+  ],
+  "groups": [],
+  "config": {},
+  "extra": {
+    "ue_links": [],
+    "links_added_by_ue": [],
+    "ds": {
+      "scale": 0.9646149645000008,
+      "offset": [
+        1631.660607951843,
+        853.986070950943
+      ]
+    },
+    "frontendVersion": "1.28.8",
+    "VHS_latentpreview": false,
+    "VHS_latentpreviewrate": 0,
+    "VHS_MetadataImage": true,
+    "VHS_KeepIntermediate": true
+  },
+  "version": 0.4
+}

@@ -1,0 +1,143 @@
+{
+  "id": "4a3dfff0-29c9-4460-aa79-fd3215d8fa87",
+  "revision": 0,
+  "last_node_id": 10,
+  "last_link_id": 4,
+  "nodes": [
+    {
+      "id": 10,
+      "type": "WG_Pipeline",
+      "pos": [
+        -1130,
+        -1020
+      ],
+      "size": [
+        400,
+        868
+      ],
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "workflow_edges",
+          "type": "STRING",
+          "links": null
+        },
+        {
+          "name": "workflow_edges (refined)",
+          "type": "STRING",
+          "links": null
+        },
+        {
+          "name": "workflow_json",
+          "type": "STRING",
+          "links": null
+        },
+        {
+          "name": "file_path",
+          "type": "STRING",
+          "links": null
+        }
+      ],
+      "properties": {
+        "enableTabs": false,
+        "tabWidth": 65,
+        "tabXOffset": 10,
+        "hasSecondTab": false,
+        "secondTabText": "Send Back",
+        "secondTabOffset": 80,
+        "secondTabWidth": 65,
+        "Node name for S&R": "WG_Pipeline",
+        "ue_properties": {
+          "widget_ue_connectable": {},
+          "input_ue_unconnectable": {},
+          "version": "7.5.1"
+        }
+      },
+      "widgets_values": [
+        "Create an SDXL text-to-image workflow with lora and depth controlnet support",
+        "workflow-generator-q8_0.gguf",
+        "auto",
+        "auto",
+        "auto",
+        true,
+        -1,
+        8192,
+        4096,
+        0.95,
+        0.7,
+        false,
+        true,
+        false,
+        "Qwen2.5-7B-Instruct-q8_0.gguf",
+        "paraphrase-multilingual-MiniLM-L12-v2",
+        "catalog",
+        "auto",
+        "auto",
+        "auto",
+        false,
+        -1,
+        4096,
+        4096,
+        0.95,
+        5,
+        0.7,
+        true,
+        "generated_workflow",
+        0,
+        "randomize"
+      ]
+    },
+    {
+      "id": 4,
+      "type": "Note",
+      "pos": [
+        -1600,
+        -1020
+      ],
+      "size": [
+        430,
+        290
+      ],
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "properties": {
+        "ue_properties": {
+          "widget_ue_connectable": {},
+          "version": "7.5.1",
+          "input_ue_unconnectable": {}
+        }
+      },
+      "widgets_values": [
+        "### Workflow Generator Guide\n\n**Instruction Tips:**\n- Be specific: \"Create an SDXL text-to-image workflow with LoRA support\"\n- Mention key nodes: \"Use ControlNet with Canny preprocessor\"\n\n**Default Settings:**\n- `auto_gpu_layers` is ON by default to prevent Out-Of-Memory errors.\n\n**How to Use:**\n1. **Instruction:** Enter your workflow description.\n2. **Refine:** Keep OFF initially for speed. Turn ON (`use_llm_refinement`) only if node names are incorrect.\n3. **Output:** The workflow JSON is saved to `ComfyUI/output/`.\n\n**Models Required:**\n- Main: `workflow-generator-q8_0.gguf`\n- Embedding: `paraphrase-multilingual-MiniLM-L12-v2`\n- Refine: `Qwen2.5-7B-Instruct` (Optional)\n\nYou do not have to connect outputs to a show text/string node but can if want. "
+      ],
+      "color": "#432",
+      "bgcolor": "#653"
+    }
+  ],
+  "links": [],
+  "groups": [],
+  "config": {},
+  "extra": {
+    "ue_links": [],
+    "links_added_by_ue": [],
+    "ds": {
+      "scale": 0.8769226950000011,
+      "offset": [
+        2178.610894239918,
+        1170.963627634079
+      ]
+    },
+    "frontendVersion": "1.28.8",
+    "VHS_latentpreview": false,
+    "VHS_latentpreviewrate": 0,
+    "VHS_MetadataImage": true,
+    "VHS_KeepIntermediate": true
+  },
+  "version": 0.4
+}

@@ -1,0 +1,113 @@
+{
+  "id": "b8a29305-924f-4652-a6d5-6985ab095086",
+  "revision": 0,
+  "last_node_id": 33,
+  "last_link_id": 51,
+  "nodes": [
+    {
+      "id": 31,
+      "type": "WG_UpdateNodeCatalog",
+      "pos": [
+        -1370,
+        -1160
+      ],
+      "size": [
+        270,
+        102
+      ],
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "status",
+          "type": "STRING",
+          "links": null
+        },
+        {
+          "name": "node_count",
+          "type": "INT",
+          "links": null
+        }
+      ],
+      "properties": {
+        "enableTabs": false,
+        "tabWidth": 65,
+        "tabXOffset": 10,
+        "hasSecondTab": false,
+        "secondTabText": "Send Back",
+        "secondTabOffset": 80,
+        "secondTabWidth": 65,
+        "Node name for S&R": "WG_UpdateNodeCatalog",
+        "ue_properties": {
+          "widget_ue_connectable": {},
+          "input_ue_unconnectable": {},
+          "version": "7.5.1"
+        }
+      },
+      "widgets_values": [
+        "catalog",
+        true
+      ]
+    },
+    {
+      "id": 33,
+      "type": "Note",
+      "pos": [
+        -1420,
+        -1400
+      ],
+      "size": [
+        380,
+        170
+      ],
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "properties": {
+        "ue_properties": {
+          "widget_ue_connectable": {},
+          "version": "7.5.1",
+          "input_ue_unconnectable": {}
+        }
+      },
+      "widgets_values": [
+        "Run this first to build a database of your current nodes. You don't have to connect the outputs to anything unless you want to see status messages.\n\nBy default the catalog is saved to:\n\"comfyUI\\custom_nodes\\ComfyUI-WorkflowGenerator\\catalog\"\n\nThis folder container 2 files that are built automatically:\nnode_info.json\nnode_list.json"
+      ],
+      "color": "#432",
+      "bgcolor": "#653"
+    }
+  ],
+  "links": [],
+  "groups": [],
+  "config": {},
+  "extra": {
+    "extra": {
+      "ds": {
+        "scale": 0.952486143572623,
+        "offset": [
+          163.72358533046707,
+          22.018287636666063
+        ]
+      }
+    },
+    "ue_links": [],
+    "ds": {
+      "scale": 1.4122927695244514,
+      "offset": [
+        1942.8614244792802,
+        1565.3844711413715
+      ]
+    },
+    "links_added_by_ue": [],
+    "frontendVersion": "1.28.8",
+    "VHS_latentpreview": false,
+    "VHS_latentpreviewrate": 0,
+    "VHS_MetadataImage": true,
+    "VHS_KeepIntermediate": true
+  },
+  "version": 0.4
+}
