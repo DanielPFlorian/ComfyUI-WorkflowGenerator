@@ -78,7 +78,7 @@ class HuggingFaceModelWrapper:
             logging.debug(f"Using attention: {attn_impl}")
 
         load_kwargs = {
-            "torch_dtype": torch_dtype,
+            "dtype": torch_dtype,
             "trust_remote_code": True,
             "attn_implementation": attn_impl,
         }
@@ -160,6 +160,11 @@ class HuggingFaceModelWrapper:
         tokenizer_time = time.time() - tokenizer_start
         logging.debug(f"Tokenizer loaded in {tokenizer_time:.2f}s")
 
+        # Fix for "The attention mask and the pad token id were not set" warning
+        if self.tokenizer.pad_token is None:
+            self.tokenizer.pad_token = self.tokenizer.eos_token
+            logging.debug("Tokenizer pad_token was None, set to eos_token")
+
         if hasattr(self.model, "device"):
             self.device = self.model.device
         elif hasattr(self.model, "hf_device_map"):
@@ -205,9 +210,22 @@ class HuggingFaceModelWrapper:
                 device = self.device
             input_ids = input_ids.to(device)
 
+        # Create attention mask if not provided
+        attention_mask = kwargs.pop("attention_mask", None)
+        if attention_mask is None:
+            # Assuming input_ids contains only valid tokens (no padding), create full mask
+            attention_mask = torch.ones_like(input_ids)
+
         with torch.no_grad():
             generated_ids = self.model.generate(
-                input_ids, max_new_tokens=max_new_tokens, temperature=temperature, top_p=top_p, do_sample=do_sample, **kwargs
+                input_ids,
+                max_new_tokens=max_new_tokens,
+                temperature=temperature,
+                top_p=top_p,
+                do_sample=do_sample,
+                attention_mask=attention_mask,
+                pad_token_id=self.tokenizer.pad_token_id,
+                **kwargs
             )
 
         return generated_ids
