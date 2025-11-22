@@ -18,6 +18,7 @@ from ..utils.model_manager import (
     detect_model_format,
     get_model_full_path,
     get_workflow_generator_models,
+    register_llm_folder_type,
 )
 from ..utils.node_utils import get_n_threads_options, parse_n_threads
 
@@ -33,6 +34,13 @@ class WorkflowGeneratorNode(io.ComfyNode):
 
     @classmethod
     def define_schema(cls):
+        # Ensure LLM folder is registered before getting model list
+        register_llm_folder_type()
+        model_options = get_workflow_generator_models()
+        # If no models found, provide at least the default option
+        if not model_options:
+            model_options = ["workflow-generator-q8_0.gguf"]
+        
         return io.Schema(
             node_id="WorkflowGenerator",
             category="WorkflowGenerator",
@@ -45,7 +53,7 @@ class WorkflowGeneratorNode(io.ComfyNode):
                 io.String.Input("instruction", multiline=True, tooltip="Description of the desired ComfyUI workflow."),
                 io.Combo.Input(
                     "model_path",
-                    options=get_workflow_generator_models(),  # Called dynamically in define_schema() - updates on frontend reload
+                    options=model_options,  # Populated after ensuring folder registration
                     default="workflow-generator-q8_0.gguf",
                     tooltip="Model file (GGUF) or directory (HuggingFace).",
                 ),

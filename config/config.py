@@ -81,14 +81,17 @@ def resolve_config_path(path: str, base_path: Path | None = None) -> str:
                 return str(full_path)
             return str(full_path.resolve())
 
+    # Check if path is just "catalog" or relative path inside custom node dir
     full_path = base_path / path
     if full_path.exists():
         return str(full_path)
 
+    # Check if it's in the catalog directory (convenience for just passing filename)
     catalog_path = base_path / "catalog" / path
     if catalog_path.exists():
         return str(catalog_path)
 
+    # Fallback: return absolute path even if it doesn't exist
     return str(full_path.resolve())
 
 

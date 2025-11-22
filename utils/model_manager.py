@@ -38,12 +38,25 @@ def get_comfyui_base_path() -> Path | None:
     # 3. Environment variable
     current_path = Path.cwd()
 
-    if (current_path / "comfy").exists() or (current_path / "comfyUI").exists():
+    # Case 1: running from inside ComfyUI directory
+    if (current_path / "main.py").exists() and (current_path / "nodes.py").exists():
         return current_path
 
+    # Case 2: running from parent directory (portable version root)
+    # Check for "ComfyUI" directory
+    if (current_path / "ComfyUI").exists() and (current_path / "ComfyUI" / "main.py").exists():
+        return current_path / "ComfyUI"
+        
+    # Check for "comfy" directory (unlikely but possible)
+    if (current_path / "comfy").exists() and (current_path / "comfy" / "main.py").exists():
+        return current_path / "comfy"
+
+    # Case 3: Check parents (if running from a subdir)
     for parent in current_path.parents:
-        if (parent / "comfy").exists() or (parent / "comfyUI").exists():
+        if (parent / "main.py").exists() and (parent / "nodes.py").exists():
             return parent
+        if (parent / "ComfyUI").exists() and (parent / "ComfyUI" / "main.py").exists():
+            return parent / "ComfyUI"
 
     comfyui_path = os.environ.get("COMFYUI_PATH")
     if comfyui_path:
@@ -93,7 +106,28 @@ def resolve_model_path(model_path: str, model_type: str = "llm", fallback_to_abs
                     model_dirs = folder_paths.get_folder_paths("clip_gguf")
                 if not model_dirs:
                     model_dirs = folder_paths.get_folder_paths("llm")
+                
+                # If "llm" path wasn't found via get_folder_paths, try accessing the registered paths directly
+                if not model_dirs and "llm" in folder_paths.folder_names_and_paths:
+                     model_dirs = folder_paths.folder_names_and_paths["llm"][0]
 
+                if model_dirs:
+                    for model_dir in model_dirs:
+                        full_path = os.path.join(model_dir, model_path)
+                        if os.path.exists(full_path):
+                            return full_path
+
+                        filename = os.path.basename(model_path)
+                        full_path = os.path.join(model_dir, filename)
+                        if os.path.exists(full_path):
+                            return full_path
+
+            model_dirs = folder_paths.get_folder_paths("llm")
+            # If "llm" path wasn't found via get_folder_paths, try accessing the registered paths directly
+            if not model_dirs and "llm" in folder_paths.folder_names_and_paths:
+                    model_dirs = folder_paths.folder_names_and_paths["llm"][0]
+            
+            if model_dirs:
                 for model_dir in model_dirs:
                     full_path = os.path.join(model_dir, model_path)
                     if os.path.exists(full_path):
@@ -103,38 +137,40 @@ def resolve_model_path(model_path: str, model_type: str = "llm", fallback_to_abs
                     full_path = os.path.join(model_dir, filename)
                     if os.path.exists(full_path):
                         return full_path
-
-            model_dirs = folder_paths.get_folder_paths("llm")
-            for model_dir in model_dirs:
-                full_path = os.path.join(model_dir, model_path)
-                if os.path.exists(full_path):
-                    return full_path
-
-                filename = os.path.basename(model_path)
-                full_path = os.path.join(model_dir, filename)
-                if os.path.exists(full_path):
-                    return full_path
         except Exception as e:
             logging.warning(f"Failed to resolve path using folder_paths: {e}")
 
+    # Manual fallback (always try this if folder_paths didn't find it)
     comfyui_base = get_comfyui_base_path()
     if comfyui_base:
         llm_dir = comfyui_base / "models" / "LLM"
         if llm_dir.exists():
+            # Try exact path in LLM dir
             full_path = llm_dir / model_path
             if full_path.exists():
                 return str(full_path)
 
+            # Try filename in LLM dir
             filename = os.path.basename(model_path)
             full_path = llm_dir / filename
             if full_path.exists():
                 return str(full_path)
+            
+            # Try recursive search in LLM dir for GGUF files
+            if model_path.endswith(".gguf"):
+                for root, _, files in os.walk(llm_dir):
+                    if filename in files:
+                        return os.path.join(root, filename)
 
     if fallback_to_absolute:
         abs_path = os.path.abspath(model_path)
         if os.path.exists(abs_path):
             return abs_path
-        # Return the path anyway (let the caller handle missing file)
+        # Only return absolute path if it actually exists, otherwise return the original path
+        # or try to return the most likely expected path (in models/LLM) so the error message is clearer
+        if comfyui_base:
+             expected_path = comfyui_base / "models" / "LLM" / model_path
+             return str(expected_path)
         return abs_path
 
     return model_path
@@ -327,26 +363,33 @@ def get_llm_model_list() -> list[str]:
         except (PermissionError, OSError) as e:
             logging.warning(f"Cannot scan directory {directory}: {e}")
 
+    # Always try to get models, even if folder_paths isn't registered
+    comfyui_base = get_comfyui_base_path()
+    
     if not COMFYUI_AVAILABLE:
-        comfyui_base = get_comfyui_base_path()
         if comfyui_base:
             llm_dir = comfyui_base / "models" / "LLM"
             scan_directory(llm_dir)
         return sorted(model_names)
 
     try:
+        # First try using folder_paths if registered
         if "llm" in folder_paths.folder_names_and_paths:
             llm_paths, _ = folder_paths.folder_names_and_paths["llm"]
             for llm_path in llm_paths:
                 llm_dir = Path(llm_path)
                 scan_directory(llm_dir)
-        else:
-            comfyui_base = get_comfyui_base_path()
-            if comfyui_base:
-                llm_dir = comfyui_base / "models" / "LLM"
-                scan_directory(llm_dir)
+        
+        # Always also try direct path as fallback (in case folder_paths wasn't registered)
+        if comfyui_base:
+            llm_dir = comfyui_base / "models" / "LLM"
+            scan_directory(llm_dir)
     except Exception as e:
         logging.warning(f"Failed to get LLM model list: {e}")
+        # Fallback to direct path scan
+        if comfyui_base:
+            llm_dir = comfyui_base / "models" / "LLM"
+            scan_directory(llm_dir)
 
     return sorted(model_names)
 

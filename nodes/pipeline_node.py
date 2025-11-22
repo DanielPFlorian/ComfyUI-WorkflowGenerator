@@ -25,6 +25,7 @@ from ..utils.model_manager import (
     get_model_full_path,
     get_refine_agent_models,
     get_workflow_generator_models,
+    register_llm_folder_type,
 )
 from ..utils.node_utils import check_llm_lazy_status
 
@@ -48,6 +49,19 @@ class WGPipelineNode(io.ComfyNode):
 
     @classmethod
     def define_schema(cls):
+        # Ensure LLM folder is registered before getting model list
+        register_llm_folder_type()
+        model_options = get_workflow_generator_models()
+        refine_model_options = get_refine_agent_models()
+        embedding_model_options = get_embedding_models()
+        # If no models found, provide at least the default options
+        if not model_options:
+            model_options = ["workflow-generator-q8_0.gguf"]
+        if not refine_model_options:
+            refine_model_options = ["Qwen2.5-7B-Instruct-q8_0.gguf"]
+        if not embedding_model_options:
+            embedding_model_options = ["paraphrase-multilingual-MiniLM-L12-v2"]
+        
         return io.Schema(
             node_id="WG_Pipeline",
             category="WorkflowGenerator",
@@ -64,7 +78,7 @@ class WGPipelineNode(io.ComfyNode):
                 io.String.Input("instruction", multiline=True, tooltip="Description of the desired ComfyUI workflow."),
                 io.Combo.Input(
                     "model_path",
-                    options=get_workflow_generator_models(),  # Called dynamically in define_schema() - updates on frontend reload
+                    options=model_options,  # Populated after ensuring folder registration
                     default="workflow-generator-q8_0.gguf",
                     tooltip="Model file (GGUF) or directory (HuggingFace).",
                 ),
@@ -98,14 +112,14 @@ class WGPipelineNode(io.ComfyNode):
                 ),
                 io.Combo.Input(
                     "refine_model_path",
-                    options=get_refine_agent_models(),  # Called dynamically in define_schema() - updates on frontend reload
+                    options=refine_model_options,  # Populated after ensuring folder registration
                     default="Qwen2.5-7B-Instruct-q8_0.gguf",
                     lazy=True,
                     tooltip="LLM model for refinement.",
                 ),
                 io.Combo.Input(
                     "embedding_model_path",
-                    options=get_embedding_models(),  # Called dynamically in define_schema() - updates on frontend reload
+                    options=embedding_model_options,  # Populated after ensuring folder registration
                     default="paraphrase-multilingual-MiniLM-L12-v2",
                     tooltip="Embedding model for semantic search.",
                 ),
