@@ -391,7 +391,8 @@ def get_llm_model_list() -> list[str]:
             llm_dir = comfyui_base / "models" / "LLM"
             scan_directory(llm_dir)
 
-    return sorted(model_names)
+    # Deduplicate list (folder_paths and manual scan might find same files)
+    return sorted(list(set(model_names)))
 
 
 def get_workflow_generator_models() -> list[str]:
