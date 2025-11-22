@@ -459,9 +459,7 @@ class NodeValidator:
                         connection_issues.append(
                             {"edge_index": i, "node": src_node, "type": "output", "name": src_name, "available": src_output_names}
                         )
-                        logging.debug(
-                            f"Source node '{src_node}' has no output '{src_name}'. Available: {src_output_names[:5]}..."
-                        )
+                        logging.debug(f"Source node '{src_node}' has no output '{src_name}'. Available: {src_output_names[:5]}...")
             except Exception as e:
                 logging.warning(f"Failed to validate source node '{src_node}' output: {e}")
 
@@ -473,9 +471,7 @@ class NodeValidator:
                         connection_issues.append(
                             {"edge_index": i, "node": dst_node, "type": "input", "name": dst_name, "available": dst_input_names}
                         )
-                        logging.debug(
-                            f"Destination node '{dst_node}' has no input '{dst_name}'. Available: {dst_input_names[:5]}..."
-                        )
+                        logging.debug(f"Destination node '{dst_node}' has no input '{dst_name}'. Available: {dst_input_names[:5]}...")
 
                         if dst_node not in swap_map:
                             try:
@@ -509,7 +505,9 @@ class NodeValidator:
                                                     )
                                                 if swap_name and swap_name != dst_node:
                                                     swap_map[dst_node] = swap_name
-                                                    logging.info(f"Fixed node name: '{dst_node}' -> '{swap_name}' (has required input '{dst_name}')")
+                                                    logging.info(
+                                                        f"Fixed node name: '{dst_node}' -> '{swap_name}' (has required input '{dst_name}')"
+                                                    )
                                                     break
                                             else:
                                                 swap_map[dst_node] = candidate["node_name"]

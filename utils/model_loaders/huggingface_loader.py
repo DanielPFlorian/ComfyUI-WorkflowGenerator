@@ -149,8 +149,8 @@ class HuggingFaceModelWrapper:
                 self.tokenizer = AutoTokenizer.from_pretrained(tokenizer_load_path, trust_remote_code=True)
             except (HFValidationError, Exception) as e:
                 if (isinstance(e, HFValidationError) or "Repo id must use alphanumeric" in str(e)) and (
-                    os.path.sep in tokenizer_load_path or
-                    (os.name == "nt" and len(tokenizer_load_path) > 1 and tokenizer_load_path[1] == ":")
+                    os.path.sep in tokenizer_load_path
+                    or (os.name == "nt" and len(tokenizer_load_path) > 1 and tokenizer_load_path[1] == ":")
                 ):
                     raise ValueError(
                         f"Tokenizer path does not exist: {tokenizer_path_abs}\n"

@@ -40,7 +40,7 @@ class WorkflowGeneratorNode(io.ComfyNode):
         # If no models found, provide at least the default option
         if not model_options:
             model_options = ["workflow-generator-q8_0.gguf"]
-        
+
         return io.Schema(
             node_id="WorkflowGenerator",
             category="WorkflowGenerator",
@@ -69,7 +69,11 @@ class WorkflowGeneratorNode(io.ComfyNode):
                     default="auto",
                     tooltip="Attention implementation (HuggingFace).",
                 ),
-                io.Boolean.Input("auto_gpu_layers", default=True, tooltip="Auto-calculate GPU layers based on available VRAM (prevents OOM errors) (GGUF)."),
+                io.Boolean.Input(
+                    "auto_gpu_layers",
+                    default=True,
+                    tooltip="Auto-calculate GPU layers based on available VRAM (prevents OOM errors) (GGUF).",
+                ),
                 io.Int.Input("n_gpu_layers", default=-1, min=-1, max=1000, tooltip="Number of GPU layers (GGUF). -1 for all."),
                 io.Int.Input("max_new_tokens", default=8192, min=1, max=32768, tooltip="Max tokens to generate."),
                 io.Int.Input("context_size", default=4096, min=512, max=131072, tooltip="Context window size (GGUF)."),

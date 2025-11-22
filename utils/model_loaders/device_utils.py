@@ -17,9 +17,7 @@ except ImportError:
     logging.warning("ComfyUI model_management not available, using basic device detection")
 
 
-def calculate_optimal_gpu_layers(
-    model_size_gb: float, available_vram_gb: float, reserve_gb: float = 2.0, context_size: int = 4096
-) -> int:
+def calculate_optimal_gpu_layers(model_size_gb: float, available_vram_gb: float, reserve_gb: float = 2.0, context_size: int = 4096) -> int:
     """
     Calculate optimal number of GPU layers based on available VRAM.
 

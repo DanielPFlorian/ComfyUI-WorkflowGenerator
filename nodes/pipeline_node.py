@@ -61,7 +61,7 @@ class WGPipelineNode(io.ComfyNode):
             refine_model_options = ["Qwen2.5-7B-Instruct-q8_0.gguf"]
         if not embedding_model_options:
             embedding_model_options = ["paraphrase-multilingual-MiniLM-L12-v2"]
-        
+
         return io.Schema(
             node_id="WG_Pipeline",
             category="WorkflowGenerator",
@@ -94,7 +94,11 @@ class WGPipelineNode(io.ComfyNode):
                     default="auto",
                     tooltip="Attention implementation (HuggingFace).",
                 ),
-                io.Boolean.Input("auto_gpu_layers", default=True, tooltip="Auto-calculate GPU layers based on available VRAM (prevents OOM errors) (GGUF)."),
+                io.Boolean.Input(
+                    "auto_gpu_layers",
+                    default=True,
+                    tooltip="Auto-calculate GPU layers based on available VRAM (prevents OOM errors) (GGUF).",
+                ),
                 io.Int.Input("n_gpu_layers", default=-1, min=-1, max=1000, tooltip="Number of GPU layers (GGUF). -1 for all."),
                 io.Int.Input("max_new_tokens", default=8192, min=1, max=32768, tooltip="Max tokens to generate."),
                 io.Int.Input("context_size", default=4096, min=512, max=131072, tooltip="Context window size (GGUF)."),
@@ -158,7 +162,12 @@ class WGPipelineNode(io.ComfyNode):
                 ),
                 io.Int.Input("refine_max_new_tokens", default=4096, min=1, max=16384, lazy=True, tooltip="Max tokens for refinement."),
                 io.Int.Input(
-                    "refine_context_size", default=4096, min=512, max=32768, lazy=True, tooltip="Context window size for refinement model (GGUF)."
+                    "refine_context_size",
+                    default=4096,
+                    min=512,
+                    max=32768,
+                    lazy=True,
+                    tooltip="Context window size for refinement model (GGUF).",
                 ),
                 io.Float.Input(
                     "refine_temperature", default=0.95, min=0.0, max=2.0, step=0.01, lazy=True, tooltip="Temperature for refinement."

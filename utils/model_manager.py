@@ -46,7 +46,7 @@ def get_comfyui_base_path() -> Path | None:
     # Check for "ComfyUI" directory
     if (current_path / "ComfyUI").exists() and (current_path / "ComfyUI" / "main.py").exists():
         return current_path / "ComfyUI"
-        
+
     # Check for "comfy" directory (unlikely but possible)
     if (current_path / "comfy").exists() and (current_path / "comfy" / "main.py").exists():
         return current_path / "comfy"
@@ -106,10 +106,10 @@ def resolve_model_path(model_path: str, model_type: str = "llm", fallback_to_abs
                     model_dirs = folder_paths.get_folder_paths("clip_gguf")
                 if not model_dirs:
                     model_dirs = folder_paths.get_folder_paths("llm")
-                
+
                 # If "llm" path wasn't found via get_folder_paths, try accessing the registered paths directly
                 if not model_dirs and "llm" in folder_paths.folder_names_and_paths:
-                     model_dirs = folder_paths.folder_names_and_paths["llm"][0]
+                    model_dirs = folder_paths.folder_names_and_paths["llm"][0]
 
                 if model_dirs:
                     for model_dir in model_dirs:
@@ -125,8 +125,8 @@ def resolve_model_path(model_path: str, model_type: str = "llm", fallback_to_abs
             model_dirs = folder_paths.get_folder_paths("llm")
             # If "llm" path wasn't found via get_folder_paths, try accessing the registered paths directly
             if not model_dirs and "llm" in folder_paths.folder_names_and_paths:
-                    model_dirs = folder_paths.folder_names_and_paths["llm"][0]
-            
+                model_dirs = folder_paths.folder_names_and_paths["llm"][0]
+
             if model_dirs:
                 for model_dir in model_dirs:
                     full_path = os.path.join(model_dir, model_path)
@@ -155,7 +155,7 @@ def resolve_model_path(model_path: str, model_type: str = "llm", fallback_to_abs
             full_path = llm_dir / filename
             if full_path.exists():
                 return str(full_path)
-            
+
             # Try recursive search in LLM dir for GGUF files
             if model_path.endswith(".gguf"):
                 for root, _, files in os.walk(llm_dir):
@@ -169,8 +169,8 @@ def resolve_model_path(model_path: str, model_type: str = "llm", fallback_to_abs
         # Only return absolute path if it actually exists, otherwise return the original path
         # or try to return the most likely expected path (in models/LLM) so the error message is clearer
         if comfyui_base:
-             expected_path = comfyui_base / "models" / "LLM" / model_path
-             return str(expected_path)
+            expected_path = comfyui_base / "models" / "LLM" / model_path
+            return str(expected_path)
         return abs_path
 
     return model_path
@@ -365,7 +365,7 @@ def get_llm_model_list() -> list[str]:
 
     # Always try to get models, even if folder_paths isn't registered
     comfyui_base = get_comfyui_base_path()
-    
+
     if not COMFYUI_AVAILABLE:
         if comfyui_base:
             llm_dir = comfyui_base / "models" / "LLM"
@@ -379,7 +379,7 @@ def get_llm_model_list() -> list[str]:
             for llm_path in llm_paths:
                 llm_dir = Path(llm_path)
                 scan_directory(llm_dir)
-        
+
         # Always also try direct path as fallback (in case folder_paths wasn't registered)
         if comfyui_base:
             llm_dir = comfyui_base / "models" / "LLM"
@@ -473,8 +473,7 @@ def get_model_full_path(model_name: str) -> str:
             for llm_path in llm_paths:
                 exact_path = Path(llm_path) / model_name
                 if exact_path.exists() and (
-                    (not model_name.endswith(".gguf") and exact_path.is_dir()) or
-                    (model_name.endswith(".gguf") and exact_path.is_file())
+                    (not model_name.endswith(".gguf") and exact_path.is_dir()) or (model_name.endswith(".gguf") and exact_path.is_file())
                 ):
                     return str(exact_path)
 
